@@ -6,6 +6,14 @@
 
 using namespace std;
 
+/*
+Sabo Vlad-Andrei Grupa 211
+GNU COMPILER(default codeblocks)
+Zmeteanca Gabriel
+
+
+*/
+
 
 class Vaccin
 {
