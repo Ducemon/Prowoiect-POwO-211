@@ -1,0 +1,330 @@
+#include <iostream>
+#include <vector>
+#include <list>
+
+
+
+using namespace std;
+
+
+class Vaccin
+{
+protected:
+    float pret;
+    int temperatura;
+    vector<string> componente;
+    string producator;
+public:
+
+    virtual void SchemaDeVaccinare()=0;
+    friend ostream& operator<< (ostream& out,  const Vaccin& vc)
+    {
+        out<<"Pretul: "<<vc.pret<<endl<<"Temperatura: "<<vc.temperatura<<endl<<"Producator: "<<vc.producator<<endl;
+
+        for(int i=0;i<vc.componente.size();i++)
+        {
+            out<<vc.componente[i];
+        }
+
+        return out;
+
+
+    }
+    friend istream& operator>> (istream& in,  Vaccin& vc)
+    {
+        cout<<"Introdu temperatura: "<<endl;
+        in>>vc.temperatura;
+        cout<<"Introdu pret: "<<endl;
+        in>>vc.pret;
+        cout<<"Introdu producatorul: "<<endl;
+        in>>vc.producator;
+        cout<<"Introdu numarul de componente al vaccinului: "<<endl;
+        int i;
+        cin>>i;
+        cout<<"Introdu componentele vaccinului: "<<endl;
+        for(int n=0;n<i;n++)
+        {
+            string h;
+            cin>>h;
+            vc.componente.push_back(h);
+
+        }
+
+
+
+
+        return in;
+    }
+
+
+};
+
+
+class VaccinAntigripal :public Vaccin
+{
+private:
+    vector<string> tulpina;
+    bool RecomandariOMS;
+
+public:
+    void SchemaDeVaccinare()
+    {
+        cout<<"Introdu 1 pentru a vedea schema de vaccinare pentru copii si adolescenti si 2 pentru a vedea schema pentru adulti!"<<endl;
+        int i;
+        cin>>i;
+        if(i==1)
+        {
+            cout<<"Se administreaza 0,3ml ";
+        }
+        else if(i==2)
+        {
+            cout<<"Se administreaza 0,5ml ";
+        }
+        cout<<"din 2 in 2 ani"<<endl;
+    }
+
+    friend ostream& operator<< (ostream& out,  const VaccinAntigripal& vc)
+    {
+        out<<(Vaccin&) vc<<endl;
+        if(vc.RecomandariOMS)
+        {
+            out<<"Respecta recomandarile OMS"<<endl;
+        }
+        else
+        {
+            out<<"Nu respecta recomandarile OMS"<<endl;
+        }
+
+        for(int i=0;i<vc.tulpina.size();i++)
+        {
+            out<<vc.tulpina[i]<<" ";
+        }
+        out<<endl;
+
+        return out;
+
+
+    }
+    friend istream& operator>> (istream& in,  VaccinAntigripal& vc)
+    {
+        in>>(Vaccin&) vc;
+        cout<<"Vaccinul respecta recomandarile OMS? Introduceti 1 daca da si 0 daca nu."<<endl;
+        in>>vc.RecomandariOMS;
+        cout<<"Introduceti numarul de tulpini asupra carora vaccinul are efect si mai apoi denumirile lor."<<endl;
+        int i;
+        cin>>i;
+        for(int n=0;n<i;n++)
+        {
+            string h;
+            cin>>h;
+            vc.tulpina.push_back(h);
+        }
+
+
+    }
+};
+
+class VaccinAntihepatic:public Vaccin
+{
+private:
+
+    char tiphepatita;
+    string mod_administrare;
+public:
+
+    void SchemaDeVaccinare()
+    {
+        if(this->tiphepatita!='C')
+        {
+            cout<<"Pacientul are mai mult de 1 an? Introduceti 0 pentru nu si 1 pentru da."<<endl;
+            int i;
+            cin>>i;
+            if(i)
+            {
+                cout<<"Se adminstrează 2 injectări la un interval de o lună, a treia injectare după 6 luni de la prima administrare"<<endl;
+            }
+            else
+            {
+                cout<<"Se face conform schemei de imunizare primite de la medic"<<endl;
+            }
+        }
+        else
+        {
+            cout<<"Administrarea se face doar la recomandarea medicului"<<endl;
+        }
+    }
+
+
+    friend ostream& operator<< (ostream& out,  const VaccinAntihepatic& vc)
+    {
+        out<<(Vaccin&) vc<<endl;
+        out<<"Vaccinul este pentru hepatita de tip "<<vc.tiphepatita<<" , iar modul de administrare este "<<vc.mod_administrare<<endl;
+        return out;
+
+
+    }
+    friend istream& operator>> (istream& in,  VaccinAntihepatic& vc)
+    {
+        in>>(Vaccin&) vc;
+        cout<<"Introduceti tipul hepatitei, preferabil cu majuscula."<<endl;
+        in>>vc.tiphepatita;
+        cout<<"Introduceti modul de administrare."<<endl;
+        in>>vc.mod_administrare;
+
+
+        return in;
+
+
+    }
+
+
+
+};
+
+class VaccinGuvid:public Vaccin
+{
+private:
+
+    vector<string> efecte_adv;
+    vector<string> med_cind;
+    float rata_eff;
+
+public:
+    void SchemaDeVaccinare()
+    {
+        cout<<"Vaccinul se administreaza persoanelor cu varsta de peste 16 ani, 2 doze la o perioada de 21 zile."<<endl;
+    }
+
+    friend ostream& operator<< (ostream& out,  const VaccinGuvid& vc)
+    {
+        out<<(Vaccin&) vc<<endl;
+        out<<"Vaccinul are rata de eficienta: "<<vc.rata_eff;
+        out<<"Vaccinul are urmatoarele efecte adverse: "<<endl;
+        for(int i=0;i<vc.efecte_adv.size();i++)
+        {
+            out<<vc.efecte_adv[i]<<endl;
+        }
+        out<<endl;
+        for(int i=0;i<vc.efecte_adv.size();i++)
+        {
+            out<<vc.med_cind[i]<<endl;
+        }
+        out<<endl;
+
+        return out;
+
+    }
+    friend istream& operator>> (istream& in,  VaccinGuvid& vc)
+    {
+        cout<<"Introduceti rata de eficienta"<<endl;
+        in>>vc.rata_eff;
+        cout<<"Introduceti numarul de efecte adverse si mai apoi numele acestora"<<endl;
+        int i;
+        cin>>i;
+        for(int n=0;n<i;n++)
+        {
+            string h;
+            cin>>h;
+            vc.efecte_adv.push_back(h);
+        }
+        cout<<"Introduceti numarul de efecte adverse si mai apoi numele acestora"<<endl;
+        cin>>i;
+        for(int n=0;n<i;n++)
+        {
+            string h;
+            cin>>h;
+            vc.med_cind.push_back(h);
+        }
+
+
+
+
+        return in;
+
+    }
+
+
+
+};
+
+class Comanda
+{
+private:
+
+    //const int ID;//ID-ul o sa fie o oroare cosmica dar aia e nu stiu sa-i dau random nu mi-a iesit la proiect, nu merge fara constructori si constructorii nu merg ca n-am avut timp sa ma uit ce au
+    string data;
+    string nume_client;
+    vector<Vaccin*> vaccinuri;
+    int nr_vacgrip;
+    int nr_vachep;
+    int nr_vacguvid;
+public:
+
+
+
+    /*Comanda():(string data, string nume_client, int nr_vacgrip, int nr_vachep, int nr_vacguvid, vector<Vaccin*> vaccinuri)
+    {
+        this->data=data;
+        this->nume_client=nume_client;
+        this->nr_vacgrip=nr_vacgrip;
+        this->nr_vacguvid=nr_vacguvid;
+        this->vaccinuri=temp2;
+        this->nr_vachepe=nr_vachep;
+    }
+
+
+    Comanda& operator =(const Comanda &ob)
+    {
+        if (this!=&ob)
+        {
+
+        this->data=ob.data;
+        this->nume_client=ob.nume_client;
+        strcpy(this->autor,ob.autor);
+        this->nr_vacgrip=ob.nr_vacgrip;
+        this->nr_vacguvid=ob.nr_vacguvid;
+        vector<Vaccin*> temp2(nrcarti,0);
+        this->vaccinuri=temp2;
+        this->nr_vachepe=ob.nr_vachep;
+        }
+    }
+
+constructorii is luati din proiectul meu si modificati dar nu suficient cat sa mearga am cam ramas fara timp*/
+
+};
+
+class ListaComenzi
+{
+private:
+
+    vector<Comanda> ListC;
+public:
+    ListaComenzi operator +(Comanda a)
+    {
+        this->ListC.push_back(a);
+        return *this;
+    }
+
+
+
+};
+
+
+
+int main()
+{
+    VaccinAntigripal A;
+    VaccinAntihepatic B;
+    VaccinGuvid C;
+    cin>>A>>B>>C;
+    cout<<A<<B<<C;
+    Vaccin* lista[3];
+    lista [0] = new VaccinAntigripal();
+    lista [1] = new VaccinAntihepatic();
+    lista [2] = new VaccinGuvid();
+    for(int i=0;i<3;i++)
+    {
+        lista[i]->SchemaDeVaccinare();
+    }
+
+}
